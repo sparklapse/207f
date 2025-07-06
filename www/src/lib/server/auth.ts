@@ -3,11 +3,12 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 import { svelteKitHandler } from "better-auth/svelte-kit";
 import { db } from "./db";
 
-import { AUTH_GOOGLE_CLIENT, AUTH_GOOGLE_SECRET } from "$env/static/private";
+import { BETTER_AUTH_SECRET, AUTH_GOOGLE_CLIENT, AUTH_GOOGLE_SECRET } from "$env/static/private";
 
 import type { Handle } from "@sveltejs/kit";
 
 export const auth = betterAuth({
+  secret: BETTER_AUTH_SECRET,
   basePath: "/207f/api/auth",
   emailAndPassword: {
     enabled: false,

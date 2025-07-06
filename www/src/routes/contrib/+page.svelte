@@ -41,13 +41,10 @@
       </a>
     </div>
 
-
     <div class="rounded-lg border border-zinc-700 bg-zinc-800 p-6">
       <div class="mb-4">
         <h4 class="mb-2 text-xl font-semibold">Account</h4>
-        <p class="text-zinc-300">
-          Sign in to submit translations or reports
-        </p>
+        <p class="text-zinc-300">Sign in to submit translations or reports</p>
       </div>
     </div>
 
@@ -55,7 +52,8 @@
       <div class="mb-4">
         <h4 class="mb-2 text-xl font-semibold">Report Findings</h4>
         <p class="text-zinc-300">
-          Found a message in your Twitch chat, YouTube comments, or anywhere and it's getting past your moderation? Report it to us here and we'll use it to understand how it's getting past and if it's using and unicode trickery.
+          Found a message in your Twitch chat, YouTube comments, or anywhere and it's getting past your moderation? Report it to us here and
+          we'll use it to understand how it's getting past and if it's using and unicode trickery.
         </p>
       </div>
 

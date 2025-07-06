@@ -4,7 +4,7 @@
 
 <div class="relative {classes}">
   <span class="opacity-0" role="separator">sparklapse &lt;</span>
-  <a class="absolute inset-0 group inline-flex font-bold" href="https://spkl.app">
+  <a class="group absolute inset-0 inline-flex font-bold" href="https://spkl.app">
     <span
       class="truncate text-clip transition-[max-width] delay-200 duration-200 group-hover:max-w-full {truncated
         ? 'max-w-[0.45em]'

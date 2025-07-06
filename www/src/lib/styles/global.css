@@ -179,6 +179,7 @@
     system-ui;
 }
 
-body, #root {
-  @apply bg-zinc-900 text-white min-h-screen isolate;
+body,
+#root {
+  @apply isolate min-h-screen bg-zinc-900 text-white;
 }

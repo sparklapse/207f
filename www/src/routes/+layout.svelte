@@ -12,14 +12,14 @@
 </svelte:head>
 
 <div class="min-h-screen w-full max-w-4xl px-2">
-  <header class="py-15 relative mb-2 mt-4 flex flex-col items-center gap-2 max-sm:py-12">
+  <header class="relative mt-4 mb-2 flex flex-col items-center gap-2 py-15 max-sm:py-12">
     <a href="/207f">
-      <h1 class="flex w-fit flex-col border p-1 font-mono text-3xl max-sm:text-5xl max-sm:translate-x-[-50px]">
+      <h1 class="flex w-fit flex-col border p-1 font-mono text-3xl max-sm:translate-x-[-50px] max-sm:text-5xl">
         <span>20</span>
         <span>7f</span>
       </h1>
     </a>
-    <nav class="ml-77 absolute flex flex-col leading-snug max-sm:ml-20 max-sm:gap-0.5 max-sm:text-lg">
+    <nav class="absolute ml-77 flex flex-col leading-snug max-sm:ml-20 max-sm:gap-0.5 max-sm:text-lg">
       <a class="text-zinc-400 transition-colors hover:text-white" href="/207f/contrib">Contribute</a>
       <a class="text-zinc-400 transition-colors hover:text-white" href="/207f/contrib/report">Report</a>
       <a class="text-zinc-400 transition-colors hover:text-white" href="/207f/docs">Docs</a>
@@ -31,17 +31,15 @@
 
 <footer class="flex justify-center py-14">
   <div class="max-w-4xl">
-    <p class="text-zinc-400 text-sm">
-      Made for you and the unvrs
-    </p>
+    <p class="text-sm text-zinc-400">Made for you and the unvrs</p>
     <S />
   </div>
 </footer>
 
 <!-- background grid -->
-<div class="absolute inset-x-0 left-[13rem] top-[1rem] -z-10 grid h-[64rem] justify-center">
+<div class="absolute inset-x-0 top-[1rem] left-[13rem] -z-10 grid h-[64rem] justify-center">
   <svg
-    class="h-[64rem] w-[175.5rem] stroke-white/20 [mask-image:radial-gradient(64rem_64rem_at_111.5rem_0%,white,transparent)]"
+    class="h-[64rem] w-[175.5rem] [mask-image:radial-gradient(64rem_64rem_at_111.5rem_0%,white,transparent)] stroke-white/20"
     aria-hidden="true"
   >
     <defs>

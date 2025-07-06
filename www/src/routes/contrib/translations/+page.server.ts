@@ -6,10 +6,12 @@ export const load: PageServerLoad = async ({ request }) => {
     headers: request.headers,
   });
 
-  const user = session?.user ? {
-    id: session.user.id,
-    email: session.user.email,
-  } : null;
+  const user = session?.user
+    ? {
+        id: session.user.id,
+        email: session.user.email,
+      }
+    : null;
 
   return {
     user,
