@@ -41,10 +41,13 @@
       </a>
     </div>
 
-    <div class="rounded-lg border border-zinc-700 bg-zinc-800 p-6">
+    <div class="rounded-lg border border-zinc-700 bg-zinc-800 p-6 flex flex-col">
       <div class="mb-4">
-        <h4 class="mb-2 text-xl font-semibold">Account</h4>
-        <p class="text-zinc-300">Sign in to submit translations or reports</p>
+        <h4 class="text-xl font-semibold">Total Contributions</h4>
+        <a class="text-zinc-400 hover:text-white transition-colors" href="#contributors">Contributors</a>
+      </div>
+      <div class="my-auto">
+        <p class="text-7xl text-center">0</p>
       </div>
     </div>
 

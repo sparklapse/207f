@@ -204,7 +204,7 @@
             onclick={() => {
               authClient.signIn.social({
                 provider: "google",
-                callbackURL: "/207f/contrib",
+                callbackURL: "/207f/contrib/translations",
               });
             }}
           >
