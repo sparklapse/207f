@@ -58,10 +58,7 @@
 <!-- Info -->
 <section>
   <div>
-    <h2 class="mt-2 flex flex-col font-semibold">
-      <span class="text-4xl">Read what people see</span>
-      <span class="text-2xl text-zinc-400">and clear the unicode fog</span>
-    </h2>
+    <h2 class="mt-2 flex flex-col text-4xl font-semibold">Read what people see</h2>
     <p class="mt-6 max-w-lg">
       207f is a processing library to not just strip unicode characters, but translate it back to an ascii representation that users will
       infer meaning from.

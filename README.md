@@ -1,3 +1,3 @@
 # 207f
 
-> Read what people see, and clear the unicode fog.
+> Read what people see
