@@ -3,6 +3,10 @@
   import { onMount } from "svelte";
   import { authClient } from "$lib/auth";
   import { goto } from "$app/navigation";
+  import { enhance } from "$app/forms";
+  import toast from "svelte-french-toast";
+
+  const unicode = import("$lib/unicode");
 
   let { data } = $props();
 
@@ -122,7 +126,25 @@
 
   <div class="grid gap-4 rounded-lg border border-zinc-700 bg-zinc-800 p-6 md:grid-cols-2">
     <!-- Input Section -->
-    <div class="flex flex-col gap-2">
+    <form
+      class="flex flex-col gap-2"
+      action="?/translate"
+      method="post"
+      use:enhance={() => {
+        const id = toast.loading("Submitting translation...", { duration: Infinity });
+        return ({ result }) => {
+          if (result.type === "success") {
+            toast.success("Translation submitted!", { id, duration: 7000 });
+            if (codeInfo) {
+              setCodeFromNumber(codeInfo.decimal + 1);
+              translatedInput = "";
+            }
+          } else {
+            toast.error("Failed to submit translation. Please try again or open an issue on GitHub.", { id, duration: 7000 });
+          }
+        };
+      }}
+    >
       <div>
         <label for="code-input" class="text-lg font-medium">Character Code</label>
         <input
@@ -132,21 +154,19 @@
           onkeydown={(ev) => {
             if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
               ev.preventDefault();
-
-              const char = charFromCode(codeInput);
-              if (!char) return null;
-              const code = char.codePointAt(0);
-              if (!code) return;
+              if (!codeInfo) return;
 
               const increment = ev.key === "ArrowUp" ? 1 : -1;
-              const newCodePoint = code + increment;
+              const newCodePoint = codeInfo.decimal + increment;
 
               setCodeFromNumber(newCodePoint);
             }
           }}
           placeholder="e.g., 41, 0x41, U+0041"
           class="w-full rounded border border-zinc-600 bg-zinc-900 px-3 py-2 font-mono focus:border-zinc-400 focus:outline-none"
+          required
         />
+        <input name="code" type="hidden" value={codeInfo?.decimal} />
       </div>
 
       <div class="space-y-2 font-mono text-sm">
@@ -158,25 +178,23 @@
           <span class="text-zinc-400">Decimal:</span>
           <span>{codeInfo?.decimal ?? "..."}</span>
         </div>
-        <div class="flex justify-between">
-          <span class="text-zinc-400">ASCII:</span>
-          <span class={codeInfo === null ? "text-white" : codeInfo?.isAscii ? "text-green-400" : "text-red-400"}>
-            {codeInfo === null ? "..." : codeInfo?.isAscii ? "Yes" : "No"}
-          </span>
-        </div>
       </div>
 
       <div>
         <label for="code-input" class="text-lg font-medium">Translates To</label>
         <input
           id="similar-input"
+          name="translation"
           type="text"
           bind:value={translatedInput}
           placeholder="Type or paste a character"
           maxlength="4"
           class="w-full rounded border border-zinc-600 bg-zinc-900 px-3 py-2 font-mono focus:border-zinc-400 focus:outline-none"
+          required
         />
       </div>
+
+      <input type="hidden" name="difference" value={difference} />
 
       <div class="flex flex-col gap-2 md:mt-auto">
         {#if data.user}
@@ -184,6 +202,7 @@
             <p class="text-zinc-400">{data.user.email}</p>
             <button
               class="cursor-pointer text-red-400/70 transition-colors hover:text-red-400"
+              type="button"
               onclick={() => {
                 authClient.signOut({
                   fetchOptions: {
@@ -197,10 +216,13 @@
               Sign out
             </button>
           </div>
-          <button class="cursor-pointer rounded bg-blue-600 py-2 transition-colors hover:bg-blue-700">Submit Translation</button>
+          <button class="cursor-pointer rounded bg-blue-600 py-2 transition-colors hover:bg-blue-700" type="submit"
+            >Submit Translation</button
+          >
         {:else}
           <button
             class="cursor-pointer rounded bg-blue-600 py-2 transition-colors hover:bg-blue-700"
+            type="button"
             onclick={() => {
               authClient.signIn.social({
                 provider: "google",
@@ -212,7 +234,7 @@
           </button>
         {/if}
       </div>
-    </div>
+    </form>
 
     <!-- Comparison Section -->
     <div class="flex flex-col gap-2">
@@ -234,6 +256,43 @@
         <p class="font-semibold text-blue-400">Difference ({difference.toFixed(2)})</p>
         <canvas class="font-noto w-full rounded bg-zinc-900 p-6 text-center" height="100" bind:this={canvas}></canvas>
       </div>
+      <div class="text-zinc-400">
+        {#await unicode}
+          <p class="text-sm">...</p>
+          <p>Loading...</p>
+        {:then unicode}
+          <p class="text-sm">{codeInfo ? unicode.getBlockForCode(codeInfo.decimal)?.label : "NULL"}</p>
+          <p class="truncate" title={codeInfo ? (unicode.characters.get(codeInfo.decimal) ?? "UNAMED CODE") : "NO CODE"}>
+            {codeInfo ? (unicode.characters.get(codeInfo.decimal) ?? "UNAMED CODE") : "NO CODE"}
+          </p>
+        {/await}
+      </div>
     </div>
   </div>
+
+  <!-- Translation Progress -->
+  {#await unicode}
+    <p>Loading...</p>
+  {:then unicode}
+    {@const contribPercent = Math.min((data.progress.contrib / unicode.TOTAL_CODES) * 100, 100)}
+    {@const confirmedPercent = Math.min((data.progress.confirmed / unicode.TOTAL_CODES) * 100, 100)}
+    <div class="mt-7 flex flex-col gap-2">
+      <h3 class="text-xl">Translation Progress <span class="text-zinc-400">(out of {unicode.TOTAL_CODES})</span></h3>
+      <p class="sr-only">{contribPercent.toFixed(1)}%</p>
+      <div aria-hidden="true">
+        <div class="relative h-2 overflow-hidden rounded-full bg-zinc-800">
+          <div class="absolute inset-y-0 left-0 rounded-full bg-blue-400" style="width: {Math.max(1, contribPercent)}%"></div>
+          <div class="absolute inset-y-0 left-0 rounded-full bg-green-400" style="width: {Math.max(1, confirmedPercent)}%"></div>
+        </div>
+        <div class="flex text-sm font-medium">
+          <div style="width: {contribPercent}%"></div>
+          <p class="text-blue-400">{contribPercent.toFixed(4)}% contributed</p>
+        </div>
+        <div class="flex text-sm font-medium">
+          <div style="width: {confirmedPercent}%"></div>
+          <p class="text-green-400">{confirmedPercent.toFixed(4)}% confirmed</p>
+        </div>
+      </div>
+    </div>
+  {/await}
 </section>

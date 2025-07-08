@@ -2,6 +2,7 @@
   import "@fontsource-variable/gabarito";
   import "$lib/styles/global.css";
 
+  import { Toaster } from "svelte-french-toast";
   import S from "$lib/components/s.svelte";
 
   let { children } = $props();
@@ -28,6 +29,8 @@
   </header>
   {@render children()}
 </div>
+
+<Toaster position="bottom-center" />
 
 <footer class="flex justify-center py-14">
   <div class="max-w-4xl">

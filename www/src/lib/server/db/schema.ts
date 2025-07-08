@@ -1,4 +1,4 @@
-import { pgSchema, pgTable, text, timestamp, boolean, serial } from "drizzle-orm/pg-core";
+import { pgSchema, pgTable, text, timestamp, boolean, integer, index, real } from "drizzle-orm/pg-core";
 
 // Auth
 export const user = pgTable("user", {
@@ -57,9 +57,24 @@ export const verification = pgTable("verification", {
   updatedAt: timestamp("updated_at").$defaultFn(() => /* @__PURE__ */ new Date()),
 });
 
-// export const contrib = pgSchema("contrib");
-//
-// export const translation = contrib.table("translation", {
-//   uid: serial("uid").primaryKey(),
-//   created: timestamp("created").defaultNow(),
-// });
+export const contrib = pgSchema("contrib");
+
+export const translation = contrib.table(
+  "translation",
+  {
+    id: integer("id").generatedAlwaysAsIdentity().primaryKey(),
+    userId: text("user_id")
+      .notNull()
+      .references(() => user.id),
+    created: timestamp("created").defaultNow(),
+    code: integer("code").notNull(),
+    translation: text("translation").notNull(),
+    difference: real("difference").notNull(),
+  },
+  (t) => [
+    index("translation_user_id_idx").on(t.userId),
+    index("translation_created_idx").on(t.created),
+    index("translation_code_idx").on(t.code),
+    index("translation_difference_idx").on(t.difference),
+  ],
+);

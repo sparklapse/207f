@@ -69,7 +69,7 @@
     <div class="mb-8">
       <h2 class="mb-2 text-4xl font-semibold sm:text-right">The problem in action</h2>
       <p class="max-w-lg sm:ml-auto sm:text-right">
-        Unicode has almost 300,000 code points as of version 16. These are just some of the common "obfuscation" methods you'll see but
+        Unicode has almost 150,000+ code points as of version 16. These are just some of the common "obfuscation" methods you'll see but
         there might even be some that aren't know yet.
       </p>
     </div>
