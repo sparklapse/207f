@@ -9,18 +9,23 @@ import { translation } from "$lib/server/db/schema";
 import type { PageServerLoad, Actions } from "./$types";
 
 export const load: PageServerLoad = async ({ request }) => {
-  const user = await auth.api.getSession({
-    headers: request.headers,
-  }).then((session) => (session?.user
-    ? {
-      id: session.user.id,
-      email: session.user.email,
-    }
-    : null));
+  const user = await auth.api
+    .getSession({
+      headers: request.headers,
+    })
+    .then((session) =>
+      session?.user
+        ? {
+            id: session.user.id,
+            email: session.user.email,
+          }
+        : null,
+    );
 
   const { contrib } = await db
     .select({ contrib: sql<number>`COUNT(DISTINCT ${translation.code})` })
-    .from(translation).then((query) => query[0]);
+    .from(translation)
+    .then((query) => query[0]);
 
   return {
     user,
@@ -61,10 +66,7 @@ export const actions: Actions = {
     const check = await db
       .select()
       .from(translation)
-      .where(and(
-        eq(translation.userId, result.userId),
-        eq(translation.code, result.code),
-      ))
+      .where(and(eq(translation.userId, result.userId), eq(translation.code, result.code)))
       .limit(1)
       .then((query) => query.at(0));
 

@@ -13,9 +13,8 @@ export const blocks = blocksRaw
     };
   });
 
-
 export function getBlockForCode(code: number) {
-  return blocks.filter((block) => (code >= block.start && code <= block.end)).at(0);
+  return blocks.filter((block) => code >= block.start && code <= block.end).at(0);
 }
 
 export const characters = charactersRaw
@@ -26,7 +25,8 @@ export const characters = charactersRaw
       code: parseInt(code),
       label,
     };
-  }).reduce((map, current) => {
+  })
+  .reduce((map, current) => {
     map.set(current.code, current.label);
     return map;
   }, new Map<number, string>());

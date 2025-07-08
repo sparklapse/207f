@@ -74,21 +74,15 @@
     ctx = canvas.getContext("2d") ?? undefined;
   });
 
-  const getPixelValue = (x: number, y: number) => {
-    if (!ctx) return 0;
-    const [_r, _g, _b, a] = ctx.getImageData(x, y, 1, 1).data;
-    return a / 255;
-  };
-
   const getCanvasValue = () => {
     if (!canvas || !ctx) return 0;
     const { width, height } = canvas;
 
+    const [_r, _g, _b, ...pixels] = ctx.getImageData(0, 0, width, height).data;
+
     let textValue = 0;
-    for (let x = 0; x < width; x++) {
-      for (let y = 0; y < height; y++) {
-        textValue += getPixelValue(x, y);
-      }
+    for (let p = 0; p + 3 < width * height * 4; p += 4) {
+      textValue += pixels[p] / 255;
     }
     return textValue;
   };
