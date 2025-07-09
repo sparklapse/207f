@@ -1,14 +1,12 @@
 import { z } from "zod";
 import { error } from "@sveltejs/kit";
-import { auth } from "$lib/server/auth";
 
 import { and, eq, sql } from "drizzle-orm";
-import { db } from "$lib/server/db";
 import { translation } from "$lib/server/db/schema";
 
 import type { PageServerLoad, Actions } from "./$types";
 
-export const load: PageServerLoad = async ({ request }) => {
+export const load: PageServerLoad = async ({ request, locals: { auth, db } }) => {
   const user = await auth.api
     .getSession({
       headers: request.headers,
@@ -43,7 +41,7 @@ const translationType = z.object({
 });
 
 export const actions: Actions = {
-  translate: async ({ request }) => {
+  translate: async ({ request, locals: { auth, db } }) => {
     const session = await auth.api.getSession({ headers: request.headers });
     if (!session) error(401, "Unauthorized");
 
