@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { error } from "@sveltejs/kit";
 
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, sql, desc } from "drizzle-orm";
 import { translation } from "$lib/server/db/schema";
 
 import type { PageServerLoad, Actions } from "./$types";
@@ -25,11 +25,18 @@ export const load: PageServerLoad = async ({ request, locals: { auth, db } }) =>
     .from(translation)
     .then((query) => query[0]);
 
+  const { last } = await db
+    .select({ last: translation.code })
+    .from(translation)
+    .orderBy(desc(translation.code))
+    .then((query) => query.at(0) ?? { last: 0xa1 });
+
   return {
     user,
     progress: {
       contrib,
       confirmed: 0,
+      last,
     },
   };
 };

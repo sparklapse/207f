@@ -10,8 +10,8 @@
 
   let { data } = $props();
 
-  let codeInput = $state("0x133");
-  let translatedInput = $state("ij");
+  let codeInput = $state(data.progress.last.toString());
+  let translatedInput = $state("");
   let difference = $state(0);
 
   function charFromCode(code: string) {
@@ -57,8 +57,6 @@
       codeInput = `U+${codePoint.toString(16).toUpperCase().padStart(4, "0")}`;
     } else if (codeInput.startsWith("0x") || codeInput.startsWith("0X")) {
       codeInput = `0x${codePoint.toString(16).toUpperCase()}`;
-    } else if (/^[0-9a-fA-F]+$/.test(codeInput)) {
-      codeInput = codePoint.toString(16).toUpperCase();
     } else {
       codeInput = codePoint.toString(10);
     }
@@ -145,6 +143,7 @@
           id="code-input"
           type="text"
           bind:value={codeInput}
+          autocomplete="off"
           onkeydown={(ev) => {
             if (ev.key === "ArrowUp" || ev.key === "ArrowDown") {
               ev.preventDefault();
@@ -185,6 +184,12 @@
           maxlength="4"
           class="w-full rounded border border-zinc-600 bg-zinc-900 px-3 py-2 font-mono focus:border-zinc-400 focus:outline-none"
           required
+          onkeydown={(ev) => {
+            if (ev.key === "Tab" && codeInfo) {
+              ev.preventDefault();
+              setCodeFromNumber(codeInfo.decimal + 1);
+            }
+          }}
         />
       </div>
 

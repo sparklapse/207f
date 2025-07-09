@@ -7,7 +7,9 @@ const config = {
   // for more information about preprocessors
   preprocess: vitePreprocess(),
   kit: {
-    adapter: adapter(),
+    adapter: adapter({
+      config: "./wrangler.jsonc",
+    }),
     paths: {
       base: "/207f",
     },
